@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS sites (
+id SERIAL PRIMARY KEY,
+name VARCHAR,
+login VARCHAR,
+password VARCHAR,
+registration BOOLEAN
+);

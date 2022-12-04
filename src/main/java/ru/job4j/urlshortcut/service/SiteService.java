@@ -1,4 +1,4 @@
 package ru.job4j.urlshortcut.service;
 
-public interface PersonService {
+public interface SiteService {
 }
