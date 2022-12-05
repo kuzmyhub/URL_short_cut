@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.job4j.urlshortcut.model.Site;
 import ru.job4j.urlshortcut.service.SiteService;
 
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class SiteController {
     private BCryptPasswordEncoder encoder;
 
     @PostMapping("/sign-up")
-    public Map<String, String> signUp(@RequestBody Site site) {
+    public Map<String, String> signUp(@Valid @RequestBody Site site) {
         Optional<Site> optionalSite = simpleSiteService
                 .findByName(site.getName());
         if (optionalSite.isPresent()) {

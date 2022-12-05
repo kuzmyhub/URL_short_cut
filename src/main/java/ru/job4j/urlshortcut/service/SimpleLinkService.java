@@ -27,4 +27,8 @@ public class SimpleLinkService implements LinkService {
     public Optional<Link> findByCode(String code) {
         return linkRepository.findByCode(code);
     }
+
+    public void updateTotal(String code) {
+        linkRepository.updateTotal(code);
+    }
 }

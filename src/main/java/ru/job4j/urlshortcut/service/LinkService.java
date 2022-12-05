@@ -13,4 +13,6 @@ public interface LinkService {
     Link save(Link link);
 
     Optional<Link> findByCode(String code);
+
+    void updateTotal(String code);
 }

@@ -7,16 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.job4j.urlshortcut.model.DTOLink;
 import ru.job4j.urlshortcut.model.Link;
 import ru.job4j.urlshortcut.model.Site;
 import ru.job4j.urlshortcut.service.LinkService;
 import ru.job4j.urlshortcut.service.SiteService;
+import ru.job4j.urlshortcut.util.SiteLogin;
 
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,11 +27,8 @@ public class LinkController {
     private SiteService simpleSiteService;
 
     @PostMapping("/convert")
-    public Map<String, String> convert(@RequestBody Link link) {
-        String siteLogin = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal().toString();
+    public Map<String, String> convert(@Valid @RequestBody Link link) {
+        String siteLogin = SiteLogin.getSiteLogin();
         link.setCode(RandomString.make(6));
         link.setSite(simpleSiteService.
                 findByLogin(siteLogin)
@@ -59,6 +55,7 @@ public class LinkController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         String.format("Code %s has no associations", code)));
+        simpleLinkService.updateTotal(code);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(code, link.getUrl())
@@ -66,11 +63,8 @@ public class LinkController {
     }
 
     @GetMapping("/statistic")
-    public Map<String, String> statistic() {
-        String siteLogin = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal().toString();
+    public List<Map<String, String>> statistic() {
+        String siteLogin = SiteLogin.getSiteLogin();
         Site site = simpleSiteService.
                 findByLogin(siteLogin)
                 .orElseThrow(
@@ -83,10 +77,11 @@ public class LinkController {
                         )
                 );
         List<Link> links = simpleLinkService.findAllBySite(site);
-        List<DTOLink> DTOLinks = links
-                .stream()
-                .map(x -> new DTOLink(x.getUrl(), x.getTotal()))
-                .toList();
-        return new HashMap<>();
+        return links.stream()
+                .map(x -> Map.of(
+                        "url", x.getUrl(),
+                        "total", String.valueOf(x.getTotal())
+                ))
+                .collect(Collectors.toList());
     }
 }
