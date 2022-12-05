@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.job4j.urlshortcut.model.Site;
 
+import java.util.Optional;
+
 import static java.util.Collections.emptyList;
 
 @Service
@@ -17,10 +19,11 @@ public class SiteDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Site user = siteService.findByLogin(login);
-        if (user == null) {
+        Optional<Site> optionalUser = siteService.findByLogin(login);
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(login);
         }
+        Site user = optionalUser.get();
         return new User(user.getLogin(), user.getPassword(), emptyList());
     }
 }

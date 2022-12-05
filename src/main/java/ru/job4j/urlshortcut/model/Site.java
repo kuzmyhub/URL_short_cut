@@ -29,5 +29,5 @@ public class Site {
     private String password;
 
     @Column(name = "registration")
-    private boolean registration = false;
+    private boolean registration = true;
 }

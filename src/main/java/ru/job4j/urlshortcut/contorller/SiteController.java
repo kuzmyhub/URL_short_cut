@@ -8,28 +8,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.job4j.urlshortcut.model.Site;
-import ru.job4j.urlshortcut.service.SimpleSiteService;
+import ru.job4j.urlshortcut.service.SiteService;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/site")
 @AllArgsConstructor
 public class SiteController {
 
-    private SimpleSiteService siteService;
+    private SiteService simpleSiteService;
     private BCryptPasswordEncoder encoder;
 
     @PostMapping("/sign-up")
-    public Site signUp(@RequestBody Site site) {
-        site.setLogin(RandomString.make(6));
-        site.setPassword(RandomString.make(6));
-        site.setRegistration(true);
-        Site encodeSite = new Site();
-        encodeSite.setName(site.getName());
-        encodeSite.setLogin(site.getLogin());
-        encodeSite.setPassword(encoder.encode(site.getPassword()));
-        encodeSite.setRegistration(site.isRegistration());
-        siteService.save(encodeSite);
-        site.setId(encodeSite.getId());
-        return site;
+    public Map<String, String> signUp(@RequestBody Site site) {
+        Optional<Site> optionalSite = simpleSiteService
+                .findByName(site.getName());
+        if (optionalSite.isPresent()) {
+            return Map.of(
+                    "registration", String.valueOf(!site.isRegistration()),
+                    "login", optionalSite.get().getLogin(),
+                    "password", (optionalSite.get().getPassword()));
+        }
+        String login = RandomString.make(6);
+        String password = RandomString.make(6);
+        site.setLogin(login);
+        site.setPassword(encoder.encode(password));
+        simpleSiteService.save(site);
+        return Map.of(
+                "registration", String.valueOf(site.isRegistration()),
+                "login", login,
+                "password", password);
     }
 }
