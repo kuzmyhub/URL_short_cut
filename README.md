@@ -19,6 +19,11 @@
 8. Liquibase 4.15.0
 9. PostgreSQL 14
 
+## Требуемое окружение
+1. JDK 17
+2. Apache Maven 3.8.5
+3. PostgreSQL 14
+
 ## Запуск приложения
 
 1. Открыть диалоговое окно комбинацией клавиш Win+R;
@@ -103,5 +108,9 @@ Token (ключ) ```Authorization: Bearer xxx.yyy.zzz```
 
 ![jmap1](img/statisticResponse.png)
 
+## Контакты
 
+Telegram: @smith_serg
+
+Email: kuznetsov.s.i@bk.ru
 
