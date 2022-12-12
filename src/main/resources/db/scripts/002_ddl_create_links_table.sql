@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS links (
+create TABLE IF NOT EXISTS links (
 id SERIAL PRIMARY KEY,
 url VARCHAR UNIQUE,
 code VARCHAR UNIQUE,
@@ -6,9 +6,9 @@ total INT,
 site_id INT references sites(id)
 );
 
-COMMENT ON TABLE links IS 'Данные ссылок зарегистрированных сайтов';
-COMMENT ON COLUMN links.id IS 'Идентификатор ссылки';
-COMMENT ON COLUMN links.url IS 'Ссылка';
-COMMENT ON COLUMN links.code IS 'Код ассоциированный со ссылкой';
-COMMENT ON COLUMN links.total IS 'Количество вызовов ссылки';
-COMMENT ON COLUMN links.site_id IS 'Идентификатор зарегистрированного сайта';
+comment on table links is 'Данные ссылок зарегистрированных сайтов';
+comment on column links.id is 'Идентификатор ссылки';
+comment on column links.url is 'Ссылка';
+comment on column links.code is 'Код ассоциированный со ссылкой';
+comment on column links.total is 'Количество вызовов ссылки';
+comment on column links.site_id is 'Идентификатор зарегистрированного сайта';

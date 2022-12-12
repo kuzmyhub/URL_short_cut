@@ -20,26 +20,13 @@ import java.util.Optional;
 public class SiteController {
 
     private SiteService simpleSiteService;
-    private BCryptPasswordEncoder encoder;
 
     @PostMapping("/sign-up")
     public Map<String, String> signUp(@Valid @RequestBody Site site) {
-        Optional<Site> optionalSite = simpleSiteService
-                .findByName(site.getName());
-        if (optionalSite.isPresent()) {
-            return Map.of(
-                    "registration", String.valueOf(!site.isRegistration()),
-                    "login", optionalSite.get().getLogin(),
-                    "password", (optionalSite.get().getPassword()));
-        }
-        String login = RandomString.make(6);
-        String password = RandomString.make(6);
-        site.setLogin(login);
-        site.setPassword(encoder.encode(password));
-        simpleSiteService.save(site);
+        Site registeredSite = simpleSiteService.save(site);
         return Map.of(
-                "registration", String.valueOf(site.isRegistration()),
-                "login", login,
-                "password", password);
+                "registration", String.valueOf(registeredSite.isRegistration()),
+                "login", registeredSite.getLogin(),
+                "password", registeredSite.getPassword());
     }
 }

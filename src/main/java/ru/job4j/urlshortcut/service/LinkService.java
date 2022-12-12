@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface LinkService {
 
-    List<Link> findAllBySite(Site site);
+    List<Link> findAllBySite();
 
     Link save(Link link);
 

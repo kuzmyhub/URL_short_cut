@@ -28,23 +28,9 @@ public class LinkController {
 
     @PostMapping("/convert")
     public Map<String, String> convert(@Valid @RequestBody Link link) {
-        String siteLogin = SiteLogin.getSiteLogin();
-        link.setCode(RandomString.make(6));
-        link.setSite(simpleSiteService.
-                findByLogin(siteLogin)
-                .orElseThrow(
-                        () -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                String.format(
-                                        "Site with login %s not found",
-                                        siteLogin
-                                )
-                        )
-                )
-        );
-        simpleLinkService.save(link);
+        Link registeredLink = simpleLinkService.save(link);
         return Map.of(
-                "code", link.getCode()
+                "code", registeredLink.getCode()
         );
     }
 
@@ -55,7 +41,6 @@ public class LinkController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         String.format("Code %s has no associations", code)));
-        simpleLinkService.updateTotal(code);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(code, link.getUrl())
@@ -64,19 +49,7 @@ public class LinkController {
 
     @GetMapping("/statistic")
     public List<Map<String, String>> statistic() {
-        String siteLogin = SiteLogin.getSiteLogin();
-        Site site = simpleSiteService.
-                findByLogin(siteLogin)
-                .orElseThrow(
-                        () -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                String.format(
-                                        "Site with login %s not found",
-                                        siteLogin
-                                )
-                        )
-                );
-        List<Link> links = simpleLinkService.findAllBySite(site);
+        List<Link> links = simpleLinkService.findAllBySite();
         return links.stream()
                 .map(x -> Map.of(
                         "url", x.getUrl(),

@@ -21,6 +21,8 @@ public interface LinkRepository extends CrudRepository<Link, Integer> {
 
     Optional<Link> findByCode(String code);
 
+    Optional<Link> findByUrl(String url);
+
     @Transactional
     @Modifying
     @Query(UPDATE_TOTAL)
