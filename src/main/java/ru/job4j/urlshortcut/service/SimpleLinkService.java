@@ -10,6 +10,7 @@ import ru.job4j.urlshortcut.repository.LinkRepository;
 import ru.job4j.urlshortcut.util.SiteLogin;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -22,9 +23,12 @@ public class SimpleLinkService implements LinkService {
     private SiteService simpleSiteService;
 
     public List<Link> findAllBySite() {
-        Optional<Site> optionalSite = simpleSiteService.
-                findByLogin(SiteLogin.getSiteLogin());
-        return linkRepository.findAllBySite(optionalSite.get());
+        Site site = simpleSiteService.
+                findByLogin(SiteLogin.getSiteLogin())
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Invalid login"
+                ));
+        return linkRepository.findAllBySite(site);
     }
 
     public Link save(Link link) {
@@ -32,20 +36,18 @@ public class SimpleLinkService implements LinkService {
         if (optionalLink.isPresent()) {
             return optionalLink.get();
         }
-        Optional<Site> optionalSite = simpleSiteService
-                .findByLogin(SiteLogin.getSiteLogin());
-        link.setSite(optionalSite.get());
+        Site site = simpleSiteService
+                .findByLogin(SiteLogin.getSiteLogin())
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Invalid login"
+                ));
+        link.setSite(site);
         link.setCode(generateShortLink(NUMBER_OF_SYMBOLS_OF_SHORT_LINK));
         return linkRepository.save(link);
     }
 
     public Optional<Link> findByCode(String code) {
-        Optional<Link> link = linkRepository.findByCode(code);
-        if (link.isEmpty()) {
-            return link;
-        }
-        updateTotal(code);
-        return link;
+        return linkRepository.findByCode(code);
     }
 
     public void updateTotal(String code) {

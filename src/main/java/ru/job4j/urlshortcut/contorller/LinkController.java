@@ -41,6 +41,7 @@ public class LinkController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         String.format("Code %s has no associations", code)));
+        simpleLinkService.updateTotal(code);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header(code, link.getUrl())
