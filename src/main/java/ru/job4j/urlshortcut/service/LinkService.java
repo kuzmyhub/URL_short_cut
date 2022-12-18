@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface LinkService {
 
-    List<Link> findAllBySite();
+    List<Link> findAllBySite(String siteLogin);
 
-    Link save(Link link);
+    Link save(Link link, String siteLogin, int length);
 
     Optional<Link> findByCode(String code);
 

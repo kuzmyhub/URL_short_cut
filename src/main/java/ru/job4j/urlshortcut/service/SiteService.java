@@ -10,5 +10,5 @@ public interface SiteService {
 
     Optional<Site> findByName(String name);
 
-    Site save(Site site);
+    Site save(Site site, int length);
 }
