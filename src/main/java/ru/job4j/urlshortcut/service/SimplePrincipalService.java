@@ -1,10 +1,12 @@
-package ru.job4j.urlshortcut.util;
+package ru.job4j.urlshortcut.service;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
-public final class SiteLogin {
+@Service
+public class SimplePrincipalService implements PrincipalService {
 
-    public static String getSiteLogin() {
+    public String getSiteLogin() {
         return SecurityContextHolder
                 .getContext()
                 .getAuthentication()
