@@ -42,6 +42,13 @@
 1. Собрать проект командой ```docker-compose build```;
 2. Запустить проект командой ```docker-compose up```.
 
+### Kubernetes
+
+1. Запустить minikube командой ```minikube start```;
+2. Перейти в директорию ```job4j_URL_short_cut\k8s```;
+3. Запустить файл commands.sh командой ```sh commands.sh```;
+4. Получить URL для подключения к сервису командой ```minikube service spring-boot-service```.
+
 ## Функционал приложения
 
 ### 1. Регистрация
